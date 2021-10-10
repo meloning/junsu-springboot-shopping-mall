@@ -232,9 +232,12 @@ class ItemRepositoryTest {
         }
 
         Pageable pageable = PageRequest.of(0, 5);
+
+        // when
         Page<Item> itemPagingResult = itemRepository.findAll(booleanBuilder, pageable);
         System.out.println(String.format("Total Element : %s", itemPagingResult.getTotalElements()));
 
+        // then
         List<Item> resultItemList = itemPagingResult.getContent();
         assertThat(resultItemList.size()).isEqualTo(2);
         assertThat(resultItemList).extracting("price", "itemSellStatus")
