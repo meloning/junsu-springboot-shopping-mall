@@ -122,4 +122,34 @@ class ItemRepositoryTest {
         assertThat(itemList).extracting("price")
                 .containsExactly(10004, 10003, 10002, 10001);
     }
+
+    @Test
+    @DisplayName("@Query를 이용한 상품 조회 테스트")
+    public void findByDetailTest() {
+        // given
+        this.createItemList();
+
+        // when
+        List<Item> itemList = itemRepository.findByDetail("테스트 상품 상세 설명");
+
+        // then
+        assertThat(itemList.size()).isEqualTo(10);
+        assertThat(itemList).extracting("price")
+                .containsExactly(10010, 10009, 10008, 10007, 10006, 10005, 10004, 10003, 10002, 10001);
+    }
+
+    @Test
+    @DisplayName("nativeQuery 속성을 이용한 상품 조회 테스ㅌ")
+    public void findByDetailByNativeTest() {
+        // given
+        this.createItemList();
+
+        // when
+        List<Item> itemList = itemRepository.findByDetailByNative("테스트 상품 상세 설명");
+
+        // then
+        assertThat(itemList.size()).isEqualTo(10);
+        assertThat(itemList).extracting("price")
+                .containsExactly(10010, 10009, 10008, 10007, 10006, 10005, 10004, 10003, 10002, 10001);
+    }
 }
