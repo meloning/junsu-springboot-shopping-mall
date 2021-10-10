@@ -1,0 +1,27 @@
+server:
+  port: 80
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shop?serverTimezone=UTC
+    username: root
+    password: wnstn0601
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+logging:
+  level:
+    # 쿼리에 물음표로 출력되는 바인드 파라미터 출력
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
