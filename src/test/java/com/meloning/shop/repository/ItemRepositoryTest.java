@@ -18,7 +18,6 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.Instant;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,8 +42,6 @@ class ItemRepositoryTest {
         item.setDetail("테스트 상품 상세 설명");
         item.setItemSellStatus(ItemSellStatus.SELL);
         item.setStock(100);
-        item.setCreatedDate(Instant.now());
-        item.setUpdatedDate(Instant.now());
 
         // when
         Item savedItem = itemRepository.save(item);
@@ -61,8 +58,6 @@ class ItemRepositoryTest {
             item.setDetail("테스트 상품 상세 설명" + i);
             item.setItemSellStatus(ItemSellStatus.SELL);
             item.setStock(100);
-            item.setCreatedDate(Instant.now());
-            item.setUpdatedDate(Instant.now());
             Item savedItem = itemRepository.save(item);
         }
     }
@@ -195,8 +190,6 @@ class ItemRepositoryTest {
             item.setDetail("테스트 상품 상세 설명" + i);
             item.setItemSellStatus(ItemSellStatus.SELL);
             item.setStock(100);
-            item.setCreatedDate(Instant.now());
-            item.setUpdatedDate(Instant.now());
             Item savedItem = itemRepository.save(item);
         }
         for (int i = 6; i <= 10; i++) {
@@ -206,8 +199,6 @@ class ItemRepositoryTest {
             item.setDetail("테스트 상품 상세 설명" + i);
             item.setItemSellStatus(ItemSellStatus.SOLD_OUT);
             item.setStock(100);
-            item.setCreatedDate(Instant.now());
-            item.setUpdatedDate(Instant.now());
             Item savedItem = itemRepository.save(item);
         }
     }

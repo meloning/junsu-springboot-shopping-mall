@@ -3,6 +3,7 @@ package com.meloning.shop.entity;
 import com.meloning.shop.constant.ItemSellStatus;
 import com.meloning.shop.repository.ItemRepository;
 import com.meloning.shop.repository.MemberRepository;
+import com.meloning.shop.repository.OrderItemRepository;
 import com.meloning.shop.repository.OrderRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,6 +31,9 @@ class OrderTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
     @PersistenceContext
     EntityManager entityManager;
 
@@ -41,8 +44,6 @@ class OrderTest {
         newItem.setDetail("상세 설명");
         newItem.setItemSellStatus(ItemSellStatus.SELL);
         newItem.setStock(100);
-        newItem.setCreatedDate(Instant.now());
-        newItem.setUpdatedDate(Instant.now());
         return newItem;
     }
 
@@ -104,5 +105,26 @@ class OrderTest {
 
         // then
         entityManager.flush();
+    }
+
+    @Test
+    @DisplayName("지연 로딩 테스트")
+    public void lazyLoadingTest() {
+        // given
+        Order order = this.createOrder();
+        Long orderItemId = order.getOrderItems().get(0).getId();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        // then
+        System.out.println(String.format("Order class : %s", orderItem.getOrder().getClass()));
+        System.out.println("--------------------------------");
+        orderItem.getOrder().getOrderDate();
+        System.out.println("--------------------------------");
     }
 }
