@@ -37,4 +37,13 @@ public class OrderItem {
     @LastModifiedDate
     @Column(updatable = true)
     private Instant updatedDate;
+
+    public void setOrder(Order order) {
+        this.order = order;
+
+        // 무한루프에 빠지지 않도록 체크
+        if (!order.getOrderItems().contains(this)) {
+            order.getOrderItems().add(this);
+        }
+    }
 }
