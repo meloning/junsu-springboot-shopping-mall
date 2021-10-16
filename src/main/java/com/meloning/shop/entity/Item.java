@@ -6,14 +6,13 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.Instant;
 
 @Getter
 @Setter
 @ToString
 @Entity
 @Table(name = "item")
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
@@ -34,7 +33,4 @@ public class Item {
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
-
-    private Instant createdDate;
-    private Instant updatedDate;
 }

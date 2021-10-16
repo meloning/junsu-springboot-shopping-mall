@@ -11,14 +11,14 @@ import javax.persistence.*;
 @ToString
 @Entity
 @Table(name = "cart")
-public class Cart {
+public class Cart extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
