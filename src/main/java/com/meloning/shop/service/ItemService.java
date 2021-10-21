@@ -2,11 +2,14 @@ package com.meloning.shop.service;
 
 import com.meloning.shop.dto.ItemFormDto;
 import com.meloning.shop.dto.ItemImageDto;
+import com.meloning.shop.dto.ItemSearchDto;
 import com.meloning.shop.entity.Item;
 import com.meloning.shop.entity.ItemImage;
 import com.meloning.shop.repository.ItemImageRepository;
 import com.meloning.shop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,11 +32,11 @@ public class ItemService {
         itemRepository.save(item);
 
         // 이미지 등록
-        for (int i=0; i<itemImageFileList.size(); i++) {
+        for (int i = 0; i < itemImageFileList.size(); i++) {
             ItemImage itemImage = new ItemImage();
             itemImage.setItem(item);
             if (i == 0) {
-               itemImage.setRepresentativeImage(true);
+                itemImage.setRepresentativeImage(true);
             } else {
                 itemImage.setRepresentativeImage(false);
             }
@@ -67,10 +70,15 @@ public class ItemService {
         List<Long> itemImageIdList = itemFormDto.getItemImageIdList();
 
         // 이미지 등록
-        for (int i=0; i<itemImageFileList.size(); i++) {
+        for (int i = 0; i < itemImageFileList.size(); i++) {
             itemImageService.updateItemImage(itemImageIdList.get(i), itemImageFileList.get(i));
         }
 
         return item.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getAdminItemPage(itemSearchDto, pageable);
     }
 }
