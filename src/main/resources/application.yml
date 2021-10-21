@@ -9,7 +9,7 @@ spring:
     password: wnstn0601
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         show_sql: true
@@ -21,6 +21,14 @@ spring:
       enabled: true
   thymeleaf:
     cache: false
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 100MB
+
+upload:
+  root: ${HOME:/home/junsu}/shop
+  item-image: ${upload.root}/item
 
 logging:
   level:
