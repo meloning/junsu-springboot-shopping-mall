@@ -1,6 +1,7 @@
 package com.meloning.shop.entity;
 
 import com.meloning.shop.constant.ItemSellStatus;
+import com.meloning.shop.dto.ItemFormDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,4 +34,12 @@ public class Item extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
+
+    public void updateItem(ItemFormDto itemFormDto) {
+        this.name = itemFormDto.getName();
+        this.price = itemFormDto.getPrice();
+        this.stock = itemFormDto.getStock();
+        this.detail = itemFormDto.getDetail();
+        this.itemSellStatus = itemFormDto.getItemSellStatus();
+    }
 }
