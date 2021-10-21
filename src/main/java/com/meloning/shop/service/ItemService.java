@@ -3,6 +3,7 @@ package com.meloning.shop.service;
 import com.meloning.shop.dto.ItemFormDto;
 import com.meloning.shop.dto.ItemImageDto;
 import com.meloning.shop.dto.ItemSearchDto;
+import com.meloning.shop.dto.MainItemDto;
 import com.meloning.shop.entity.Item;
 import com.meloning.shop.entity.ItemImage;
 import com.meloning.shop.repository.ItemImageRepository;
@@ -80,5 +81,10 @@ public class ItemService {
     @Transactional(readOnly = true)
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getAdminItemPage(itemSearchDto, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
 }

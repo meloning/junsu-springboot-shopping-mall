@@ -3,8 +3,11 @@ package com.meloning.shop.repository;
 import com.meloning.shop.constant.ItemDateSearchType;
 import com.meloning.shop.constant.ItemSellStatus;
 import com.meloning.shop.dto.ItemSearchDto;
+import com.meloning.shop.dto.MainItemDto;
+import com.meloning.shop.dto.QMainItemDto;
 import com.meloning.shop.entity.Item;
 import com.meloning.shop.entity.QItem;
+import com.meloning.shop.entity.QItemImage;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,6 +26,10 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     public ItemRepositoryCustomImpl(EntityManager entityManager) {
         this.jpaQueryFactory = new JPAQueryFactory(entityManager);
+    }
+
+    private BooleanExpression itemNameLike(String searchQuery) {
+        return StringUtils.isEmpty(searchQuery) ? null : QItem.item.name.like("%" + searchQuery + "%");
     }
 
     private BooleanExpression searchSellStatusEq(ItemSellStatus searchSellStatus) {
@@ -66,6 +73,35 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .fetchResults();
 
         List<Item> content = results.getResults();
+        long total = results.getTotal();
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        QItem item = QItem.item;
+        QItemImage itemImage = QItemImage.itemImage;
+
+        QueryResults<MainItemDto> results = jpaQueryFactory
+                .select(
+                        new QMainItemDto(
+                                item.id,
+                                item.name,
+                                item.detail,
+                                itemImage.imageUrl,
+                                item.price
+                        )
+                )
+                .from(itemImage)
+                .join(itemImage.item, item)
+                .where(itemImage.representativeImage.eq(true))
+                .where(itemNameLike(itemSearchDto.getSearchQuery()))
+                .orderBy(item.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<MainItemDto> content = results.getResults();
         long total = results.getTotal();
         return new PageImpl<>(content, pageable, total);
     }
