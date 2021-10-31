@@ -1,6 +1,7 @@
 package com.meloning.shop.service;
 
 import com.meloning.shop.constant.ItemSellStatus;
+import com.meloning.shop.constant.OrderStatus;
 import com.meloning.shop.dto.OrderDto;
 import com.meloning.shop.entity.Item;
 import com.meloning.shop.entity.Member;
@@ -81,7 +82,29 @@ class OrderServiceTest {
         assertThat(totalPrice).isEqualTo(order.getTotalPrice());
     }
 
+    @Test
+    @DisplayName("주문 취소 테스트")
+    public void cancelOrder(){
+        // given
+        Item item = saveItem();
+        Member member = saveMember();
 
+        OrderDto orderDto = new OrderDto();
+        orderDto.setCount(10);
+        orderDto.setItemId(item.getId());
+
+        Long orderId = orderService.order(orderDto, member.getEmail());
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        // when
+        orderService.cancelOrder(orderId);
+
+        // then
+        assertThat(OrderStatus.CANCEL).isEqualTo(order.getOrderStatus());
+        assertThat(100).isEqualTo(item.getStock());
+    }
 
 
 }
