@@ -27,6 +27,15 @@ public class OrderItem extends BaseTimeEntity {
 
     private int count;
 
+    public static OrderItem createOrderItem(Item item, int count) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setCount(count);
+        orderItem.setPrice(item.getPrice());
+        item.removeStock(count);
+        return orderItem;
+    }
+
     public void setOrder(Order order) {
         this.order = order;
 
@@ -34,5 +43,9 @@ public class OrderItem extends BaseTimeEntity {
         if (!order.getOrderItems().contains(this)) {
             order.getOrderItems().add(this);
         }
+    }
+
+    public int getTotalPrice() {
+        return price * count;
     }
 }
