@@ -59,6 +59,7 @@ class OrderServiceTest {
     @Test
     @DisplayName("주문 테스트")
     public void order(){
+        // given
         Item item = saveItem();
         Member member = saveMember();
 
@@ -66,7 +67,9 @@ class OrderServiceTest {
         orderDto.setCount(10);
         orderDto.setItemId(item.getId());
 
+        // when
         Long orderId = orderService.order(orderDto, member.getEmail());
+
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -74,6 +77,11 @@ class OrderServiceTest {
 
         int totalPrice = orderDto.getCount()*item.getPrice();
 
+        // then
         assertThat(totalPrice).isEqualTo(order.getTotalPrice());
     }
+
+
+
+
 }
