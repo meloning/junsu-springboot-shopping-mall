@@ -9,7 +9,6 @@ import com.meloning.shop.repository.ItemRepository;
 import com.meloning.shop.repository.MemberRepository;
 import com.meloning.shop.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -72,5 +71,21 @@ public class OrderService {
         return new PageImpl<>(orderHistDtoList, pageable, totalCount);
     }
 
+    @Transactional(readOnly = true)
+    public boolean validateOrder(Long orderId, String email) {
+        Member currentMember = memberRepository.findByEmail(email)
+                .orElseThrow(EntityNotFoundException::new);
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+        Member savedMember = order.getMember();
 
+        return currentMember.getEmail().equalsIgnoreCase(savedMember.getEmail());
+    }
+
+
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+        order.cancelOrder();
+    }
 }
