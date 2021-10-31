@@ -12,6 +12,10 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
+        # 기본 batch size 설정
+        # 복잡한 조회쿼리 작성시, 지연로딩으로 발생해야 하는 쿼리를 IN절로 한번에 모아보내는 기능
+        # 아래 설정대로 하면 1000개를 in절로 한번에 모아보내게 된다.
+        default_batch_fetch_size: 1000
         show_sql: true
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
