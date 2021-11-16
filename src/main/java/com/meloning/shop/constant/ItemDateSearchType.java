@@ -31,7 +31,7 @@ public enum ItemDateSearchType {
     }
 
     public static ItemDateSearchType fromName(String name) {
-        return ITEM_DATE_SEARCH_TYPE_MAP.get(name);
+        return (name == null) ? ItemDateSearchType.ALL : ITEM_DATE_SEARCH_TYPE_MAP.get(name);
     }
 
     public Instant compareDateTime(ItemDateSearchType reqItemDateSearchType) {

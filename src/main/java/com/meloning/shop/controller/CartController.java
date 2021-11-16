@@ -2,6 +2,7 @@ package com.meloning.shop.controller;
 
 import com.meloning.shop.dto.CartDetailDto;
 import com.meloning.shop.dto.CartItemDto;
+import com.meloning.shop.dto.CartOrderDto;
 import com.meloning.shop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -78,5 +79,23 @@ public class CartController {
         cartService.deleteCartItem(cartItemId);
 
         return new ResponseEntity<>(cartItemId, HttpStatus.OK);
+    }
+
+    @PostMapping("/cart/orders")
+    public ResponseEntity<?> orderCartItem(@RequestBody CartOrderDto cartOrderDto, Principal principal) {
+        List<CartOrderDto> cartOrderDtoList = cartOrderDto.getCartOrderDtoList();
+        final String email = principal.getName();
+        if (cartOrderDtoList == null || cartOrderDtoList.isEmpty()) {
+            return new ResponseEntity<>("주문할 상품을 선택해주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        for (CartOrderDto cartOrder : cartOrderDtoList) {
+            if (cartService.validateCartItem(cartOrder.getCartItemId(), email)) {
+                return new ResponseEntity<>("주문 권한이 없습니다.", HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        Long orderId = cartService.orderCartItem(cartOrderDtoList, email);
+        return new ResponseEntity<>(orderId, HttpStatus.OK);
     }
 }

@@ -2,6 +2,8 @@ package com.meloning.shop.service;
 
 import com.meloning.shop.dto.CartDetailDto;
 import com.meloning.shop.dto.CartItemDto;
+import com.meloning.shop.dto.CartOrderDto;
+import com.meloning.shop.dto.OrderDto;
 import com.meloning.shop.entity.Cart;
 import com.meloning.shop.entity.CartItem;
 import com.meloning.shop.entity.Item;
@@ -93,6 +95,31 @@ public class CartService {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(EntityNotFoundException::new);
         cartItemRepository.delete(cartItem);
+    }
+
+    public Long orderCartItem(List<CartOrderDto> cartOrderDtoList, String email) {
+        List<OrderDto> orderDtoList = new ArrayList<>();
+
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItem cartItem = cartItemRepository
+                    .findById(cartOrderDto.getCartItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+
+            OrderDto orderDto = new OrderDto();
+            orderDto.setItemId(cartItem.getItem().getId());
+            orderDto.setCount(cartItem.getCount());
+            orderDtoList.add(orderDto);
+        }
+
+        Long orderId = orderService.orders(orderDtoList, email);
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItem cartItem = cartItemRepository
+                    .findById(cartOrderDto.getCartItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+            cartItemRepository.delete(cartItem);
+        }
+
+        return orderId;
     }
 
 
