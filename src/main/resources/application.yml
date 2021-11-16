@@ -9,7 +9,7 @@ spring:
     password: wnstn0601
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         # 기본 batch size 설정

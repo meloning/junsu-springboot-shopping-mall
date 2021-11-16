@@ -13,7 +13,7 @@ public class FileService {
     public String uploadFile(String uploadRoot, String originalFileName, byte[] fileData) throws Exception {
         UUID uuid = UUID.randomUUID();
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String savedFileName = uuid.toString() + extension;
+        String savedFileName = uuid + extension;
         String fileUploadFullUrl = uploadRoot + File.separator + savedFileName;
         FileOutputStream fileOutputStream = new FileOutputStream(fileUploadFullUrl);
         fileOutputStream.write(fileData);
