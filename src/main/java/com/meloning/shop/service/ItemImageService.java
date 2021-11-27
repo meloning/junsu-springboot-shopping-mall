@@ -2,6 +2,7 @@ package com.meloning.shop.service;
 
 import com.meloning.shop.entity.ItemImage;
 import com.meloning.shop.repository.ItemImageRepository;
+import com.meloning.shop.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,6 @@ public class ItemImageService {
     private String itemImageLocation;
 
     private final ItemImageRepository itemImageRepository;
-    private final FileService fileService;
 
     public void saveItemImage(ItemImage itemImage, MultipartFile itemImageFile) throws Exception {
         String originalImageName = itemImageFile.getOriginalFilename();
@@ -29,8 +29,8 @@ public class ItemImageService {
 
         // 파일 업로드
         if(!StringUtils.isEmpty(originalImageName)) {
-            imageName = fileService.uploadFile(itemImageLocation, originalImageName, itemImageFile.getBytes());
-            imageUrl = imageName;
+            imageName = FileUtils.uploadFile(itemImageLocation, originalImageName, itemImageFile.getBytes());
+            imageUrl = "/images/item/" + imageName;
         }
 
         // 상품 이미지 정보 저장
@@ -45,12 +45,12 @@ public class ItemImageService {
 
             // 기존 이미지 파일 삭제
             if(!StringUtils.isEmpty(savedItemImage.getImageName())) {
-                fileService.deleteFile(itemImageLocation + File.separator + savedItemImage.getImageName());
+                FileUtils.deleteFile(itemImageLocation + File.separator + savedItemImage.getImageName());
             }
 
             String originalImageName = itemImageFile.getOriginalFilename();
-            String imageName = fileService.uploadFile(itemImageLocation, originalImageName, itemImageFile.getBytes());
-            String imageUrl = imageName;
+            String imageName = FileUtils.uploadFile(itemImageLocation, originalImageName, itemImageFile.getBytes());
+            String imageUrl = "/images/item/" + imageName;
             savedItemImage.updateItemImage(originalImageName, imageName, imageUrl);
         }
     }

@@ -16,7 +16,9 @@
     <script th:inline="javascript">
         $(document).ready(function() {
             let errorMessage = [[${errorMessage}]];
-            alert(errorMessage);
+            if (errorMessage != null) {
+                alert(errorMessage);
+            }
         })
     </script>
 </th:block>
